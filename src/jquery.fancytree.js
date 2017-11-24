@@ -4462,11 +4462,11 @@ $.extend(Fancytree.prototype,
 			}
 			this.$container.toggleClass("fancytree-treefocus", flag);
 			this._triggerTreeEvent(flag ? "focusTree" : "blurTree");
-			if( flag && !this.activeNode ) {
-				// #712: Use last mousedowned node ('click' event fires after focusin)
-				targetNode = this._lastMousedownNode || this.getFirstChild();
-				targetNode && targetNode.setFocus();
-			}
+			// if( flag && !this.activeNode ) {
+			// 	// #712: Use last mousedowned node ('click' event fires after focusin)
+			// 	targetNode = this._lastMousedownNode || this.getFirstChild();
+			// 	targetNode && targetNode.setFocus();
+			// }
 		}
 	},
 	/** Widget option was set using `$().fancytree("option", "foo", "bar")`.
@@ -4738,11 +4738,11 @@ $.widget("ui.fancytree",
 			}
 			tree._setExpiringValue("focusin", true, 50);
 
-			if( flag && !node ) {
-				// #789: IE 11 may send focusin before mousdown(?)
-				node = tree._getExpiringValue("mouseDownNode");
-				if( node ) { FT.info("Reconstruct mouse target for focusin from recent event."); }
-			}
+			// if( flag && !node ) {
+			// 	// #789: IE 11 may send focusin before mousdown(?)
+			// 	node = tree._getExpiringValue("mouseDownNode");
+			// 	if( node ) { FT.info("Reconstruct mouse target for focusin from recent event."); }
+			// }
 			if(node){
 				// For example clicking into an <input> that is part of a node
 				tree._callHook("nodeSetFocus", tree._makeHookContext(node, event), flag);
@@ -4793,14 +4793,17 @@ $.widget("ui.fancytree",
 
 		}).on("mousedown" + ns, function(event){
 			var et = FT.getEventTarget(event);
-			// that.tree.debug("event(" + event.type + "): node: ", et.node);
 			// #712: Store the clicked node, so we can use it when we get a focusin event
 			//       ('click' event fires after focusin)
-			// tree.debug("event(" + event.type + "): node: ", et.node);
+			tree.debug("event(" + event.type + "): node: ", event, et, et.node);
 			tree._lastMousedownNode = et ? et.node : null;
 			// #789: Store the node also for a short period, so we can use it
 			// in a *resulting* focusin event
 			tree._setExpiringValue("mouseDownNode", tree._lastMousedownNode);
+
+		}).on("mouseup" + ns, function(event){
+			var et = FT.getEventTarget(event);
+			tree.debug("event(" + event.type + "): node: ", event, et, et.node);
 
 		}).on("click" + ns + " dblclick" + ns, function(event){
 			if(opts.disabled){
@@ -4812,7 +4815,7 @@ $.widget("ui.fancytree",
 				tree = that.tree,
 				prevPhase = tree.phase;
 
-			// that.tree.debug("event(" + event.type + "): node: ", node);
+			tree.debug("event(" + event.type + "): node: ", event, et, et.node);
 			if( !node ){
 				return true;  // Allow bubbling of other events
 			}

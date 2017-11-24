@@ -346,6 +346,7 @@ $.ui.fancytree.registerExtension({
 		if( !$span.length || !tree.enableFilter ) {
 			return res;
 		}
+		// debugger;
 		$span
 			.toggleClass("fancytree-match", !!node.match)
 			.toggleClass("fancytree-submatch", !!node.subMatchCount)
@@ -360,8 +361,8 @@ $.ui.fancytree.registerExtension({
 		} else if ( node.$subMatchBadge ) {
 			node.$subMatchBadge.hide();
 		}
-		// node.debug("nodeRenderStatus", node.titleWithHighlight, node.title)
-		// #601: also chek for $title.length, because we don't need to render
+		node.debug("nodeRenderStatus", node.titleWithHighlight, node.title, ctx	)
+		// #601: also check for $title.length, because we don't need to render
 		// if node.span is null (i.e. not rendered)
 		if( node.span && (!node.isEditing || !node.isEditing.call(node)) ) {
 			if( node.titleWithHighlight ) {
